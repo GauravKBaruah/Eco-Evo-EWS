@@ -28,6 +28,17 @@ env<-function(t,C){
 
 
 # function for simulating the dynamics of the model
+#dynamic() <- function that simulates the stochastic model
+#tmax<- total time
+#ind<- no. of individuals
+#omega<- width of fitness function
+#var.size<- variation in the phenotype
+#rho <- environmental predictability p
+#var.U<- variability in cue
+#var.theta <- variability in optimum phenotype
+#C<- parameter that controls how fast the Environment E shifts
+#r0 <- average. reproductive rate.
+#mean.breed<- mean breeding value
 
 dynamics<-function(tmax,ind,omega,var.size,rho,var.U, var.Theta,r0,mean.breed,beta){
   breed<-matrix(NA,nrow=ind,ncol=tmax)
