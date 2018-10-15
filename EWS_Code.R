@@ -27,7 +27,7 @@ env<-function(t,C){
 }
 
 
-# function for simulating the dynamics of the model
+#function for simulating the dynamics of the model
 #dynamics() <- function that simulates the stochastic model
 #tmax<- total time
 #ind<- no. of individuals
@@ -79,7 +79,7 @@ dynamics<-function(tmax,ind,omega,var.size,rho,var.U, var.Theta,r0,mean.breed,be
       
       breed[j,t]<- rnorm(1,mean=mean.breed[t-1],sd=sqrt(var.size))  #population of breeding values
       pop.breed[t]<-mean(breed[,t]) 
-      rand.s[t]<-rnorm(1,0,0.2)
+      rand.s[t]<-rnorm(1,0,0)
       s[j,t] <- breed[j,t]+beta*cue[t]+rand.s[t]   #phenotypic value for individual j
       W[j,t] <-exp(-(s[j,t]-theta[t])^2/(2*omega)) #gaussian fitness function
       
@@ -117,7 +117,8 @@ require(MASS)
 #######################STARTING PARAMETERS##############
 
 start.mean.breed=0
-EWS.model<-lapply(1, mc.replica,tmax=1000,ind=250,omega=25,beta=0.2,var.size=0.5,rho=1,var.U=1.25^2, var.Theta=1.25^2,r0=1.2,mean.breed=start.mean.breed)
+reps<-2 #no. of replicate simulations
+EWS.model<-lapply(1:reps, mc.replica,tmax=1000,ind=250,omega=25,beta=0.2,var.size=0.5,rho=1,var.U=1.25^2, var.Theta=1.25^2,r0=1.2,mean.breed=start.mean.breed)
 
 
 # sourcing the script will run the simulation
