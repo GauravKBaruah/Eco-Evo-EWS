@@ -117,8 +117,8 @@ require(MASS)
 #######################STARTING PARAMETERS##############
 
 start.mean.breed=0
-reps<-2 #no. of replicate simulations
-EWS.model<-lapply(1:reps, mc.replica,tmax=1000,ind=250,omega=25,beta=0.2,var.size=0.5,rho=1,var.U=1.25^2, var.Theta=1.25^2,r0=1.2,mean.breed=start.mean.breed)
+reps<-2 #no. of replicate simulation
+EWS.model<-lapply(1:reps, mc.replica,tmax=1000,ind=250,omega=25,beta=0.2,var.size=0.5,rho=1,var.U=0.5^2, var.Theta=0.5^2,r0=1.2,mean.breed=start.mean.breed)
 
 
 # sourcing the script will run the simulation
