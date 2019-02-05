@@ -7,7 +7,7 @@ rm(list=ls())
 set.seed(12)
 
 #environment function
-env<-function(t,C){
+env<-function(t){
   e.mean<-matrix(NA,nrow=5000,ncol=2)
   e.mean[1,1]<-0
   e.mean[1,2]<-0
@@ -19,8 +19,8 @@ env<-function(t,C){
     e.mean[t,2]<-0
   }
   else if (t>=500) {
-    e.mean[t,1]<-1 -1*(t/500)  # environmental cue
-    e.mean[t,2]<- 60 -60*(t/500)     # optimum environment
+    e.mean[t,1]<-5 -5*(t/500)  # environmental cue
+    e.mean[t,2]<- 20 -20*(t/500)     # optimum environment
   }          
  
   return(e.mean[t,])
@@ -69,9 +69,9 @@ dynamics<-function(tmax,ind,omega,var.size,rho,var.U, var.Theta,r0,mean.breed,be
   for (t in 2:tmax) {
     
     S = matrix(c(var.U, rho*sqrt(var.U*var.Theta), rho*sqrt(var.U*var.Theta), var.Theta),2)  #S is a covariance matrix of the environment and the cue of the environment
-    c[t,] <- mvrnorm(1,env(t,C),S)  #multivariate random distribution
-    cue[t]<- c[t,1]
-    theta[t] <-c[t,2]
+    c[t,] <- mvrnorm(1,env(t),S)  #multivariate random distribution
+    cue[t]<- c[t,1]# env(t)[1] +rnorm(1,0,sqrt(var.U )) # c[t,1]
+    theta[t] <-  c[t,2] #env(t)[2] + rnorm(1,0,sqrt(var.Theta))#c[t,2]
     
     
     
@@ -79,7 +79,7 @@ dynamics<-function(tmax,ind,omega,var.size,rho,var.U, var.Theta,r0,mean.breed,be
       
       breed[j,t]<- rnorm(1,mean=mean.breed[t-1],sd=sqrt(var.size))  #population of breeding values
       pop.breed[t]<-mean(breed[,t]) 
-      rand.s[t]<-rnorm(1,0,0)
+      rand.s[t]<-rnorm(1,0,0.01)
       s[j,t] <- breed[j,t]+beta*cue[t]+rand.s[t]   #phenotypic value for individual j
       W[j,t] <-exp(-(s[j,t]-theta[t])^2/(2*omega)) #gaussian fitness function
       
@@ -89,8 +89,8 @@ dynamics<-function(tmax,ind,omega,var.size,rho,var.U, var.Theta,r0,mean.breed,be
     mean.fitness[t] = mean(W[,t]) #mean fitness 
     var[t] <- var.size 
    
-    
-    mean.breed[t]<-mean.breed[t-1]+sqrt(omega)*(1/(var.size+omega))^1.5*(theta[t]-pop.breed[t]-beta*cue[t]+rand.s[t])*exp(-(pop.breed[t]+beta*cue[t]+rand.s[t]-theta[t])^2/(2*(var.size+omega)))
+    #(var.size/(omega+var(s[,t-1])))*(theta[t]-pop.breed[t]-beta*cue[t]+rand.s[t]) 
+    mean.breed[t]<-mean.breed[t-1]+ var.size*sqrt(omega)*(1/(var.size+omega))^1.5*(theta[t]-pop.breed[t]-beta*cue[t]+rand.s[t])*exp(-(pop.breed[t]+beta*cue[t]+rand.s[t]-theta[t])^2/(2*(var.size+omega)))
     phenotype[t]<- mean.breed[t] +beta*cue[t]+rand.s[t]  # dynamics of the phenotype
     N[t]<-N[t-1]*(r0^(1-N[t-1]/73))*mean.fitness[t]  # discrete population dynamics
     
@@ -118,7 +118,10 @@ require(MASS)
 
 start.mean.breed=0
 reps<-2 #no. of replicate simulation
-EWS.model<-lapply(1:reps, mc.replica,tmax=1000,ind=250,omega=25,beta=0.2,var.size=0.5,rho=1,var.U=0.5^2, var.Theta=0.5^2,r0=1.2,mean.breed=start.mean.breed)
+EWS.trait.genvar.0.5<-lapply(1, mc.replica,tmax=800,ind=200,omega=20,beta=0.2,var.size=0.5,rho=1,var.U=1.25^2, var.Theta=1.25^2,r0=1.2,mean.breed=start.mean.breed)
 
+par(mfrow=c(2,2))
+plot(EWS.trait.genvar.0.5[[1]]$N[500:530], typ='l')
+plot(EWS.trait.genvar.0.5[[1]]$phenotype[500:530],typ='l')
+plot(EWS.trait.genvar.0.5[[1]]$N[500:1000], typ='l')
 
-# sourcing the script will run the simulation
