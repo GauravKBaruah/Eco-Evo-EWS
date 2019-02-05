@@ -122,6 +122,5 @@ EWS.trait.genvar.0.5<-lapply(1:reps, mc.replica,tmax=800,ind=200,omega=20,beta=0
 
 par(mfrow=c(2,2))
 plot(EWS.trait.genvar.0.5[[1]]$N[500:530], typ='l')
-plot(EWS.trait.genvar.0.5[[1]]$phenotype[500:530],typ='l')
-plot(EWS.trait.genvar.0.5[[1]]$N[500:1000], typ='l')
+s
 
