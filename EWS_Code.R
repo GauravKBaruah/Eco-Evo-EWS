@@ -120,5 +120,4 @@ start.mean.breed=0
 reps<-2 #no. of replicate simulation
 EWS.trait.genvar.0.5<-lapply(1:reps, mc.replica,tmax=800,ind=200,omega=20,beta=0.2,var.size=0.5,rho=1,var.U=1.25^2, var.Theta=1.25^2,r0=1.2,mean.breed=start.mean.breed)
 
-par(mfrow=c(2,2))
 
